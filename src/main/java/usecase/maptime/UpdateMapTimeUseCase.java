@@ -2,7 +2,7 @@ package usecase.maptime;
 
 
 import entity.ProgramTime;
-import interface_adapter.maptime.ProgramTimePresenter;
+import interfaceadapter.maptime.ProgramTimePresenter;
 import usecase.UpdateOverlayUseCase;
 
 public class UpdateMapTimeUseCase implements UpdateMapTimeInputBoundary {
