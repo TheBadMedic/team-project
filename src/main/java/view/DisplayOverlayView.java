@@ -27,8 +27,11 @@ public class DisplayOverlayView extends JPanel implements PropertyChangeListener
         imageIcon = new ImageIcon();
         JLabel label = new JLabel();
         label.setIcon(imageIcon);
-        this.add(label);
         this.setBounds(0,0, Constants.DEFAULT_MAP_WIDTH, Constants.DEFAULT_MAP_HEIGHT);
+        this.setBackground(new Color(0,0,0,0));
+        this.setOpaque(false);
+        this.add(label);
+
     }
 
     @Override
