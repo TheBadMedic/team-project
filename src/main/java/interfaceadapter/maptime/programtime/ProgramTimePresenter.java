@@ -1,5 +1,6 @@
 package interfaceadapter.maptime.programtime;
 
+import constants.Constants;
 import usecase.maptime.UpdateMapTimeOutputData;
 import usecase.maptime.UpdateMapTimeOutputBoundary;
 
@@ -41,7 +42,7 @@ public class ProgramTimePresenter implements UpdateMapTimeOutputBoundary {
 
     private int converTimeToSlider(java.time.Instant instant) {
         java.time.Instant min = java.time.Instant.now();
-        int max = 3*24; // TODO: don't hard code
-        return (int)(java.time.Duration.between(min, instant).toHours()*100)/max;
+        int maxTime = Constants.API_MAX_DAY_LIMIT * Constants.HOURS_PER_DAY;
+        return (int)(java.time.Duration.between(min, instant).toHours()*100)/maxTime;
     }
 }

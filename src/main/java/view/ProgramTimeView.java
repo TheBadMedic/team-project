@@ -1,14 +1,14 @@
 package view;
 
-import app.uielements.CircleButton;
 import app.uielements.PauseIcon;
 import app.uielements.PlayIcon;
+import constants.Constants;
 import interfaceadapter.maptime.programtime.ProgramTimeController;
 import interfaceadapter.maptime.programtime.ProgramTimeState;
 import interfaceadapter.maptime.programtime.ProgramTimeViewModel;
 import interfaceadapter.maptime.timeanimation.TimeAnimationController;
 import uielements.CustomSliderUI;
-import uielements.DefaultThemes;
+import constants.DefaultThemes;
 import java.awt.event.ActionEvent;
 
 import javax.swing.*;
@@ -37,7 +37,6 @@ public class ProgramTimeView extends JPanel implements PropertyChangeListener {
 
         timeSlider = new JSlider(SwingConstants.HORIZONTAL, 0, 100, 0);
         timeSlider.setUI(new CustomSliderUI(timeSlider));
-        timeSlider.setPreferredSize(new Dimension(100, 10));
         timeSlider.setPaintTicks(false);
         timeSlider.addChangeListener(
                 evt -> {
@@ -49,18 +48,21 @@ public class ProgramTimeView extends JPanel implements PropertyChangeListener {
         );
         timeSlider.setOpaque(false);
         timeSlider.setPaintTicks(false);
-        timeSlider.setPreferredSize(new Dimension(400, 50));
+        timeSlider.setPreferredSize(new Dimension(Constants.SLIDER_WIDTH, Constants.SLIDER_HEIGHT));
 
-        playPauseButton = new JButton(new PlayIcon(20,17, Color.ORANGE));
+        playPauseButton = new JButton(new PlayIcon(Constants.PLAY_PAUSE_BUTTON_HEIGHT,
+                Constants.PLAY_PAUSE_BUTTON_WIDTH, Color.ORANGE));
 
         playPauseButton.addActionListener((ActionEvent e1) -> {
             Icon current = playPauseButton.getIcon();
             if (current instanceof PlayIcon ) {
-                playPauseButton.setIcon(new PauseIcon(17,17, Color.ORANGE));
+                playPauseButton.setIcon(new PauseIcon(Constants.PLAY_PAUSE_BUTTON_WIDTH,
+                        Constants.PLAY_PAUSE_BUTTON_HEIGHT, Color.ORANGE));
                 timeAnimationController.play();
             }
             else{
-                playPauseButton.setIcon(new PlayIcon(20,17, Color.ORANGE));
+                playPauseButton.setIcon(new PlayIcon(Constants.PLAY_PAUSE_BUTTON_HEIGHT,
+                        Constants.PLAY_PAUSE_BUTTON_WIDTH, Color.ORANGE));
                 timeAnimationController.pause();
             }
         });

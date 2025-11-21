@@ -80,6 +80,7 @@ public class AppBuilder {
 
     // initialising core entities
     private final ProgramTime programTime = new ProgramTime(Instant.now());
+    private final TileRepository tileRepository = new CachedTileRepository(Constants.CACHE_SIZE);
     private final OverlayManager overlayManager = new OverlayManager(Constants.DEFAULT_MAP_WIDTH,
             Constants.DEFAULT_MAP_HEIGHT);
     private final Viewport viewport = new Viewport(000,000,Constants.DEFAULT_MAP_WIDTH,
@@ -220,9 +221,10 @@ public class AppBuilder {
                         updateOverlayUseCase,
                         updateMapTimeOutputBoundary
                     );
-        ProgramTimeController programTimeController = new ProgramTimeController(updateMapTimeInputBoundary, java.time.Duration.ofDays(3));
-        // TODO: move the ofDays(3) into entities as a business rule
-        TimeAnimationController timeAnimationController = new TimeAnimationController(updateMapTimeInputBoundary, 500);
+        ProgramTimeController programTimeController = new ProgramTimeController(updateMapTimeInputBoundary,
+                Constants.API_MAX_DAY_LIMIT_DURATION);
+        TimeAnimationController timeAnimationController = new TimeAnimationController(updateMapTimeInputBoundary,
+                Constants.TICK_LENGTH_MS);
         programTimeView.setProgramTimeController(programTimeController);
         programTimeView.setTimeAnimationController(timeAnimationController);
         return this;

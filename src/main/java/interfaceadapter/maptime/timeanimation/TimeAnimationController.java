@@ -1,5 +1,9 @@
 package interfaceadapter.maptime.timeanimation;
 
+
+import constants.Constants;
+import entity.ProgramTime;
+import interfaceadapter.maptime.programtime.ProgramTimeController;
 import usecase.maptime.TickMapTimeInputData;
 import usecase.maptime.UpdateMapTimeInputBoundary;
 
@@ -41,7 +45,7 @@ public class TimeAnimationController {
             } catch (Exception e) {
                 pause();
             }
-        }, 300 /* TODO: move this to an entity or something */, tickLength, TimeUnit.MILLISECONDS);
+        }, Constants.ANIMATION_INITIAL_MS_DELAY, tickLength, TimeUnit.MILLISECONDS);
     }
 
     /**
@@ -54,6 +58,6 @@ public class TimeAnimationController {
     }
 
     private void tick(){
-        updateMapTimeInputBoundary.incrementProgramTimePerTick(new TickMapTimeInputData(1));
+        updateMapTimeInputBoundary.incrementProgramTimePerTick(new TickMapTimeInputData(Constants.TICKS_PER_SECOND));
     }
 }

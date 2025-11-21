@@ -1,4 +1,4 @@
-package uielements;
+package constants;
 
 import java.awt.*;
 import java.io.File;
@@ -31,6 +31,7 @@ public class DefaultThemes {
                     Font.TRUETYPE_FONT,
                     new File("fonts/StackSansText-Light.ttf")
             ).deriveFont(12f);
+        } catch (FontFormatException | IOException e) {
             font = new Font("Serif", Font.PLAIN, 12);
         }
 
