@@ -163,19 +163,6 @@ public class CachedTileRepository implements TileRepository {
         }
     }
 
-    public void addTileToCache(WeatherTile tile) throws TileNotFoundException {
-        if (tileCache.containsKey(tile)) {
-            return;
-        }
-        BufferedImage imageData;
-        try {
-            imageData = weatherTileApiFetcher.getWeatherTileImageData(tile);
-        } catch (TileNotFoundException e) {
-            throw new TileNotFoundException(e.getMessage());
-        }
-        tileCache.put(tile, imageData);
-    }
-
     /** Remove all <code><WeatherTile, BufferedImage></code> key-pairs
      * that have a timestamp after the current time.
      */
