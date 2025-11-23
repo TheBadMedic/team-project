@@ -9,6 +9,11 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.*;
 
+
+/** The scheduler class for TileJobs which tracks which TileJobs
+ *  are being processed and selects which ones to process next on different
+ *  threads
+ */
 public class TileJobSystem {
     private final ExecutorService executor;
     private final LinkedBlockingDeque<TileJob> queue = new LinkedBlockingDeque<>();
@@ -21,6 +26,11 @@ public class TileJobSystem {
         }
     }
 
+    /**
+     * Submit a {@link TileJob} to be completed
+     *
+     * @param job   the TileJob to be completed
+     */
     public void submitJob(TileJob job){
         processingJobs.add(job);
         queue.offer(job);
@@ -41,7 +51,7 @@ public class TileJobSystem {
     }
 
     private void worker(){
-        while (true){
+        while (!Thread.currentThread().isInterrupted()) {
             try {
                 TileJob job = queue.take();
                 processJob(job);

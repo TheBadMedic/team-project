@@ -2,6 +2,11 @@ package entity;
 
 import java.time.Instant;
 
+/**
+ * Placeholder tile for a tile displayed on the overlay
+ * which has no image data attached to yet while being fetched from the API
+ */
+
 public class IncompleteTile {
     private final Vector topLeft;
     private final Vector botRight;

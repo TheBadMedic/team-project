@@ -41,7 +41,18 @@ public interface TileRepository {
      */
     void requestTile(WeatherTile tile, Vector topLeft, Vector botRight, Location tileCoords, Instant currentTime);
 
+    /**
+     * Add a {@link TileCompletedListener} listener to this repository such that whenever a requested tile
+     * has finished fetching, the Tile and image data is passed back to all listeners
+     *
+     * @param listener  the listener for which to be attached to this repositroy
+     */
     void addListener(TileCompletedListener listener);
 
+    /** Returns whether the given tile is stored in cache
+     *
+     * @param tile  tile to check for being in presence
+     * @return  tile is stored in cache
+     */
     boolean inCache(WeatherTile tile);
 }
