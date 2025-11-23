@@ -2,8 +2,6 @@ package interfaceadapter.maptime.timeanimation;
 
 
 import constants.Constants;
-import entity.ProgramTime;
-import interfaceadapter.maptime.programtime.ProgramTimeController;
 import usecase.maptime.TickMapTimeInputData;
 import usecase.maptime.UpdateMapTimeInputBoundary;
 

@@ -15,9 +15,11 @@ public class ProgramTimeController {
         this.maxForecast = maxForecast;
     }
 
-    /** Update the program time with the newly set slider value
+    /**
+     * Update program time based on the current value stored on the JSlider
      *
-     * @param sliderVal     the value on the slider, representing an integer between 0 and 100
+     * @param sliderVal a value between 0-100, where 0 represents 0 hours from current time, and 3 represents
+     * {@link entity.ProgramTime.MAX_FORECAST} away
      */
     public void updateTime(double sliderVal) {
         java.time.Instant maxTime = convertSliderToTime(sliderVal);
