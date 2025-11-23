@@ -3,8 +3,9 @@ package interfaceadapter.mapinteraction;
 import entity.Viewport;
 import usecase.mapinteraction.PanAndZoomOutputBoundary;
 import usecase.mapinteraction.PanAndZoomOutputData;
-import usecase.mapinteraction.ZoomOutOfBoundsException;
 import org.openstreetmap.gui.jmapviewer.JMapViewer;
+
+import java.awt.*;
 
 public class PanAndZoomPresenter implements PanAndZoomOutputBoundary {
 
@@ -23,6 +24,16 @@ public class PanAndZoomPresenter implements PanAndZoomOutputBoundary {
 
     @Override
     public void present(PanAndZoomOutputData outputData) {
+        Viewport updatedViewport = outputData.getViewport();
+        mapViewModel.updateFromViewport(
+                updatedViewport.getZoomLevel(),
+                updatedViewport.getPixelCenterX(),
+                updatedViewport.getPixelCenterY()
+        );
+        int centerX = (int) updatedViewport.getPixelCenterX();
+        int centerY = (int) updatedViewport.getPixelCenterY();
+        mapViewer.setCenter(new Point(centerX, centerY));
+        mapViewer.setZoom(updatedViewport.getZoomLevel());
     }
 }
 
