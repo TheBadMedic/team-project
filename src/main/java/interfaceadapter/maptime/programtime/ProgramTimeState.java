@@ -2,7 +2,7 @@ package interfaceadapter.maptime.programtime;
 
 public class ProgramTimeState {
     private String time;
-    public int sliderValue;
+    private int sliderValue;
 
     public String getTime() {
         return time;

@@ -1,8 +1,5 @@
 package interfaceadapter.maptime.timeanimation;
 
-
-import entity.ProgramTime;
-import interfaceadapter.maptime.programtime.ProgramTimeController;
 import usecase.maptime.TickMapTimeInputData;
 import usecase.maptime.UpdateMapTimeInputBoundary;
 
@@ -10,7 +7,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
-/** Class that centrally modifies the current program time state
+/** Class that controls the ticks of the animation of the time slider
  *
  */
 public class TimeAnimationController {
@@ -27,6 +24,9 @@ public class TimeAnimationController {
         this.tickLength = tickLength;
     }
 
+    /**
+     * Progresses the slider by one hour every tick
+     */
     public synchronized void play() {
         if (playing){
             return;
@@ -44,7 +44,9 @@ public class TimeAnimationController {
         }, 300 /* TODO: move this to an entity or something */, tickLength, TimeUnit.MILLISECONDS);
     }
 
-
+    /**
+     * Pause the slider ticks
+     */
     public synchronized void pause(){
         playing = false;
         scheduler.shutdownNow();
@@ -52,6 +54,6 @@ public class TimeAnimationController {
     }
 
     private void tick(){
-        updateMapTimeInputBoundary.execute(new TickMapTimeInputData(1));
+        updateMapTimeInputBoundary.incrementProgramTimePerTick(new TickMapTimeInputData(1));
     }
 }

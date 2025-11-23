@@ -25,16 +25,12 @@ public class ProgramTimePresenter implements UpdateMapTimeOutputBoundary {
         programTimeViewModel.firePropertyChange("time slider");
     }
 
+    @Override
     public void updateTimeFromAnimator(UpdateMapTimeOutputData newTime) {
         ProgramTimeState programTimeState = programTimeViewModel.getState();
         programTimeState.setTime(formatTimeInstant(newTime.getStamp()));
         programTimeState.setSliderValue(converTimeToSlider(newTime.getStamp()));
         programTimeViewModel.firePropertyChange("animator");
-    }
-
-    @Override
-    public void incrementTime() {
-        return;
     }
 
     private String formatTimeInstant(java.time.Instant instant) {

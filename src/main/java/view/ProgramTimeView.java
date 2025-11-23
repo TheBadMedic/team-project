@@ -35,9 +35,6 @@ public class ProgramTimeView extends JPanel implements PropertyChangeListener {
         programTimeViewModel.addPropertyChangeListener(this);
         this.setLayout(new BoxLayout(this, BoxLayout.LINE_AXIS));
 
-        /** Adding JSlider
-         *
-         */
         timeSlider = new JSlider(SwingConstants.HORIZONTAL, 0, 100, 0);
         timeSlider.setUI(new CustomSliderUI(timeSlider));
         timeSlider.setPreferredSize(new Dimension(100, 10));
@@ -54,10 +51,6 @@ public class ProgramTimeView extends JPanel implements PropertyChangeListener {
         timeSlider.setPaintTicks(false);
         timeSlider.setPreferredSize(new Dimension(400, 50));
 
-
-        /** Pause play button
-         *
-         */
         playPauseButton = new JButton(new PlayIcon(20,17, Color.ORANGE));
 
         playPauseButton.addActionListener((ActionEvent e1) -> {
@@ -72,12 +65,6 @@ public class ProgramTimeView extends JPanel implements PropertyChangeListener {
             }
         });
 
-
-
-
-        /** Adding current time label
-         *
-         */
         currentTimeTitleLabel = new JLabel(ProgramTimeViewModel.CURRENT_TIME_LABEL);
         currentTimeTitleLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
         currentTime = new JLabel(ProgramTimeViewModel.getCurrentTimeFormatted());
@@ -110,9 +97,6 @@ public class ProgramTimeView extends JPanel implements PropertyChangeListener {
             final ProgramTimeState state = (ProgramTimeState) evt.getNewValue();
             timeSlider.setValue(state.getSliderValue());
             currentTime.setText(state.getTime());
-        }
-        else{
-            System.out.println(evt.getPropertyName());
         }
     }
 }

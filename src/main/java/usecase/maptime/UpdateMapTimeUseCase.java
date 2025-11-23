@@ -16,7 +16,7 @@ public class UpdateMapTimeUseCase implements UpdateMapTimeInputBoundary {
     }
 
     @Override
-    public void execute(UpdateMapTimeInputData updateMapTimeInputData) {
+    public void setProgramTime(UpdateMapTimeInputData updateMapTimeInputData) {
         programTime.setTime(updateMapTimeInputData.getCurrentTime());
         updateOverlayUseCase.update();
         UpdateMapTimeOutputData outputData = new UpdateMapTimeOutputData(
@@ -28,7 +28,7 @@ public class UpdateMapTimeUseCase implements UpdateMapTimeInputBoundary {
     }
 
     @Override
-    public void execute(TickMapTimeInputData ticks){
+    public void incrementProgramTimePerTick(TickMapTimeInputData ticks){
         programTime.incrementTime();
         updateOverlayUseCase.update();
 

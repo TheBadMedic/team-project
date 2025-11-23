@@ -13,6 +13,11 @@ public class ProgramTimeViewModel extends ViewModel<ProgramTimeState>{
         setState(new ProgramTimeState());
     }
 
+    /**
+     * Return a formatted string of the current time
+     *
+     * @return the formatted String with the current time in yyyy-MM-dd HH:mm form
+     */
     public static String getCurrentTimeFormatted(){
         return DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")
                     .withZone(ZoneId.systemDefault())

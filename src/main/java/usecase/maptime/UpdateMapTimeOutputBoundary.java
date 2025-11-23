@@ -1,12 +1,18 @@
 package usecase.maptime;
 
 public interface UpdateMapTimeOutputBoundary {
-    /** Pass new program time to the interactor
+
+    /** Update the program time label WITHOUT updating the slider based
+     * off this new time
      *
-     * @param time new program time
+     * @param time the time to update the time displayed in the UI
      */
     void updateTime(UpdateMapTimeOutputData time);
-    void updateTimeFromAnimator(UpdateMapTimeOutputData time);
-    void incrementTime();
 
+    /** Update the program time label AND update the slider based off this
+     * new time
+     *
+     * @param time the time to update the time displayed in the UI
+     */
+    void updateTimeFromAnimator(UpdateMapTimeOutputData time);
 }
