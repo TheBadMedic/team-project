@@ -6,9 +6,7 @@ import java.time.Instant;
 
 import constants.Constants;
 import dataaccessinterface.BookmarkedLocationStorage;
-import dataaccessinterface.TileRepository;
 import dataaccessobjects.InDiskBookmarkStorage;
-import dataaccessobjects.OkHttpsPointWeatherGatewayXml;
 import entity.ProgramTime;
 import entity.Viewport;
 import interfaceadapter.bookmark.BookmarksViewModel;
@@ -72,7 +70,6 @@ public class AppBuilder {
     private final BookmarkedLocationStorage bookmarkStorage = new InDiskBookmarkStorage(Constants.BOOKMARK_DATA_PATH);
     private PanAndZoomView panAndZoomView;
     private BookmarksView bookmarksView;
-    private InfoPanelPresenter infoPanelPresenter;
 
 
     public AppBuilder() {
@@ -86,6 +83,7 @@ public class AppBuilder {
 //        InfoPanelController infoPanelController;
 //        InfoPanelViewModel infoPanelViewModel;
 //        InfoPanelInteractor infoPanelInteractor;
+//        InfoPanelPresenter infoPanelPresenter;
 //        infoPanelViewModel = new InfoPanelViewModel();
 //        infoPanelController = new InfoPanelController();
 //        infoPanelInteractor = new InfoPanelInteractor();
