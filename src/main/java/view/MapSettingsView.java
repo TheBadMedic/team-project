@@ -7,8 +7,6 @@ import interfaceadapter.mapsettings.savemapsettings.SaveMapSettingsController;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
@@ -130,29 +128,21 @@ public final class MapSettingsView extends JPanel implements PropertyChangeListe
      */
     private void hookUpActions() {
         // Load existing settings.
-        loadButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                loadMapSettingsController.loadMapSettings();
-            }
-        });
+        loadButton.addActionListener(e -> loadMapSettingsController.loadMapSettings());
 
         // Save current values from the fields.
-        saveButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                String latText = latitudeField.getText().trim();
-                String lonText = longitudeField.getText().trim();
+        saveButton.addActionListener(e -> {
+            String latText = latitudeField.getText().trim();
+            String lonText = longitudeField.getText().trim();
 
-                try {
-                    double latitude = Double.parseDouble(latText);
-                    double longitude = Double.parseDouble(lonText);
-                    int zoom = (Integer) zoomSpinner.getValue();
+            try {
+                double latitude = Double.parseDouble(latText);
+                double longitude = Double.parseDouble(lonText);
+                int zoom = (Integer) zoomSpinner.getValue();
 
-                    saveMapSettingsController.saveMapSettings(latitude, longitude, zoom);
-                } catch (NumberFormatException ex) {
-                    errorLabel.setText("Latitude and longitude must be valid numbers.");
-                }
+                saveMapSettingsController.saveMapSettings(latitude, longitude, zoom);
+            } catch (NumberFormatException ex) {
+                errorLabel.setText("Latitude and longitude must be valid numbers.");
             }
         });
     }

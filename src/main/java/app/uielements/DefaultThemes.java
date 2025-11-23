@@ -17,7 +17,6 @@ public class DefaultThemes {
                     new File("fonts/StackSansText-Bold.ttf")
             ).deriveFont(12f);
         } catch (FontFormatException | IOException e) {
-            e.printStackTrace();
             font = new Font("Serif", Font.BOLD, 12);
         }
 
@@ -32,8 +31,6 @@ public class DefaultThemes {
                     Font.TRUETYPE_FONT,
                     new File("fonts/StackSansText-Light.ttf")
             ).deriveFont(12f);
-        } catch (FontFormatException | IOException e) {
-            e.printStackTrace();
             font = new Font("Serif", Font.PLAIN, 12);
         }
 

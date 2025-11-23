@@ -1,21 +1,21 @@
 package entity;
 
 public enum WeatherType {
-    Tmp2m,
-    Precip,
-    Pressure,
-    Wind;
+    TMP_2_M,
+    PRECIP,
+    PRESSURE,
+    WIND;
 
     @Override
     public String toString() {
         switch (name()) {
-            case "Tmp2m":
+            case "TMP_2_M":
                 return "Temperature at 2 metres";
-            case "Precip":
+            case "PRECIP":
                 return "Precipitation";
-            case "Pressure":
+            case "PRESSURE":
                 return "Pressure";
-            case "WindSpeed":
+            case "WIND":
                 return "Wind Speed";
             default:
                 return super.toString();

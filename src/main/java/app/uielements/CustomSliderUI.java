@@ -1,5 +1,7 @@
 package uielements;
 
+import org.jetbrains.annotations.NotNull;
+
 import javax.swing.*;
 import javax.swing.plaf.basic.BasicSliderUI;
 import java.awt.*;
@@ -52,6 +54,15 @@ public class CustomSliderUI extends BasicSliderUI {
         g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         g2d.setComposite(AlphaComposite.Src);
         g2d.setColor(new Color(0, 0, 0, 0));
+        Polygon triangle = getPolygon();
+        g2d.setColor(DEFAULT_ARROW_COLOUR);
+        g2d.fill(triangle);
+        g2d.draw(triangle);
+        g2d.dispose();
+    }
+
+    @NotNull
+    private Polygon getPolygon() {
         int defaultThumbCentreX = thumbRect.x + thumbRect.width / 2;
         int defaultThumbCentreY = thumbRect.y + thumbRect.height / 2;
         int arrowOffset = defaultThumbCentreY - DEFAULT_ARROW_HEIGHT * 2;
@@ -59,17 +70,16 @@ public class CustomSliderUI extends BasicSliderUI {
         triangle.addPoint(defaultThumbCentreX, arrowOffset + DEFAULT_ARROW_HEIGHT);
         triangle.addPoint(defaultThumbCentreX - DEFAULT_ARROW_WIDTH/2, arrowOffset);
         triangle.addPoint(defaultThumbCentreX + DEFAULT_ARROW_WIDTH/2, arrowOffset);
-        g2d.setColor(DEFAULT_ARROW_COLOUR);
-        g2d.fill(triangle);
-        g2d.draw(triangle);
-        g2d.dispose();
+        return triangle;
     }
+
+    @Override
     protected Dimension getThumbSize() {
         return new Dimension(20,50);
     }
     @Override
     public void paintFocus(Graphics g){
-        return;
+        // intentionally empty
     }
 
 }

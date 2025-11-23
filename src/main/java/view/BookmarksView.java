@@ -24,10 +24,9 @@ import java.util.List;
  */
 public final class BookmarksView extends JPanel implements PropertyChangeListener {
 
-    private final BookmarksViewModel viewModel;
-    private final AddBookmarkController addBookmarkController;
-    private final RemoveBookmarkController removeBookmarkController;
-    private final ListBookmarksController listBookmarksController;
+    private final transient AddBookmarkController addBookmarkController;
+    private final transient RemoveBookmarkController removeBookmarkController;
+    private final transient ListBookmarksController listBookmarksController;
 
     // UI components
     private final JTextField nameField = new JTextField(15);
@@ -56,7 +55,6 @@ public final class BookmarksView extends JPanel implements PropertyChangeListene
                          RemoveBookmarkController removeBookmarkController,
                          ListBookmarksController listBookmarksController) {
 
-        this.viewModel = viewModel;
         this.addBookmarkController = addBookmarkController;
         this.removeBookmarkController = removeBookmarkController;
         this.listBookmarksController = listBookmarksController;
@@ -65,10 +63,10 @@ public final class BookmarksView extends JPanel implements PropertyChangeListene
         buildUi();
 
         // Listen for state changes.
-        this.viewModel.addPropertyChangeListener(this);
+        viewModel.addPropertyChangeListener(this);
 
         // Initialise from current state, if any.
-        updateFromState(this.viewModel.getState());
+        updateFromState(viewModel.getState());
     }
 
     /**
@@ -121,73 +119,62 @@ public final class BookmarksView extends JPanel implements PropertyChangeListene
      */
     private void hookUpActions() {
         // Add bookmark.
-        addButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                String name = nameField.getText().trim();
-                String latText = latitudeField.getText().trim();
-                String lonText = longitudeField.getText().trim();
+        addButton.addActionListener(e -> {
+            String name = nameField.getText().trim();
+            String latText = latitudeField.getText().trim();
+            String lonText = longitudeField.getText().trim();
 
-                try {
-                    double latitude = Double.parseDouble(latText);
-                    double longitude = Double.parseDouble(lonText);
-                    addBookmarkController.addBookmark(name, latitude, longitude);
-                } catch (NumberFormatException ex) {
-                    // Local validation error – show directly in the view.
-                    errorLabel.setText("Latitude and longitude must be valid numbers.");
-                }
+            try {
+                double latitude = Double.parseDouble(latText);
+                double longitude = Double.parseDouble(lonText);
+                addBookmarkController.addBookmark(name, latitude, longitude);
+            } catch (NumberFormatException ex) {
+                // Local validation error – show directly in the view.
+                errorLabel.setText("Latitude and longitude must be valid numbers.");
             }
         });
 
         // Remove bookmark. If a list item is selected, remove that; otherwise
         // fall back to the values typed in the text fields.
-        removeButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                String selected = bookmarksList.getSelectedValue();
-                String name;
-                double latitude;
-                double longitude;
+        removeButton.addActionListener(e -> {
+            String selected = bookmarksList.getSelectedValue();
+            String name;
+            double latitude;
+            double longitude;
 
-                if (selected != null) {
-                    // Expected format: "name (lat, lon)"
-                    int parenIndex = selected.indexOf('(');
-                    int commaIndex = selected.indexOf(',');
-                    int closeIndex = selected.indexOf(')');
-                    if (parenIndex > 0 && commaIndex > parenIndex && closeIndex > commaIndex) {
-                        name = selected.substring(0, parenIndex).trim();
-                        String latText = selected.substring(parenIndex + 1, commaIndex).trim();
-                        String lonText = selected.substring(commaIndex + 1, closeIndex).trim();
-                        try {
-                            latitude = Double.parseDouble(latText);
-                            longitude = Double.parseDouble(lonText);
-                        } catch (NumberFormatException ex) {
-                            // Fall back to text fields if parsing fails.
-                            handleRemoveUsingFields();
-                            return;
-                        }
-                    } else {
-                        // Unexpected format; fall back to fields.
+            if (selected != null) {
+                // Expected format: "name (lat, lon)"
+                int parenIndex = selected.indexOf('(');
+                int commaIndex = selected.indexOf(',');
+                int closeIndex = selected.indexOf(')');
+                if (parenIndex > 0 && commaIndex > parenIndex && closeIndex > commaIndex) {
+                    name = selected.substring(0, parenIndex).trim();
+                    String latText = selected.substring(parenIndex + 1, commaIndex).trim();
+                    String lonText = selected.substring(commaIndex + 1, closeIndex).trim();
+                    try {
+                        latitude = Double.parseDouble(latText);
+                        longitude = Double.parseDouble(lonText);
+                    } catch (NumberFormatException ex) {
+                        // Fall back to text fields if parsing fails.
                         handleRemoveUsingFields();
                         return;
                     }
                 } else {
-                    // No selected item; use fields.
+                    // Unexpected format; fall back to fields.
                     handleRemoveUsingFields();
                     return;
                 }
-
-                removeBookmarkController.removeBookmark(name, latitude, longitude);
+            } else {
+                // No selected item; use fields.
+                handleRemoveUsingFields();
+                return;
             }
+
+            removeBookmarkController.removeBookmark(name, latitude, longitude);
         });
 
         // Refresh / list bookmarks.
-        refreshButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                listBookmarksController.listBookmarks();
-            }
-        });
+        refreshButton.addActionListener(e -> listBookmarksController.listBookmarks());
     }
 
     /**

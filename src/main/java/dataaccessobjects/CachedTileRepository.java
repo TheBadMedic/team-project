@@ -20,7 +20,7 @@ import java.util.*;
  */
 public class CachedTileRepository implements TileRepository {
     private final WeatherTileApiFetcher weatherTileApiFetcher = new OkHttpsWeatherTileApiFetcher();
-    private Map<WeatherTile, BufferedImage> tileCache;
+    private final Map<WeatherTile, BufferedImage> tileCache;
     private final TileJobSystem tileJobSystem;
     private final List<TileCompletedListener> listeners = new ArrayList<>();
     private static CachedTileRepository instance;
@@ -44,7 +44,7 @@ public class CachedTileRepository implements TileRepository {
     /**
      * Get and return the singleton instance of the CachedTileRepository, and create one
      * if one hasn't been instantiated yet.
-     * @return
+     * @return return the singleton instance of CachedTileRepository
      */
     public static CachedTileRepository getInstance(){
         if (instance == null){

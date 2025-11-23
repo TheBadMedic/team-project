@@ -29,14 +29,15 @@ public class MapOverlayStructureView extends JLayeredPane{
 
     }
 
+    @Override
     public void addPropertyChangeListener(PropertyChangeListener listener) {
         support.addPropertyChangeListener(listener);
     }
 
     public void addComponent(JPanel component, int layer){
         this.add(component, new Integer(layer));
-        //new Integer object required as specified in docs
-        //https://docs.oracle.com/javase/8/docs/api/javax/swing/JLayeredPane.html
+        // new Integer object required as specified in docs
+        // https://docs.oracle.com/javase/8/docs/api/javax/swing/JLayeredPane.html
     }
 
 }

@@ -1,9 +1,5 @@
 package entity;
 
-import dataaccessinterface.TileNotFoundException;
-import dataaccessinterface.TileRepository;
-import dataaccessobjects.tilejobs.TileCompletedListener;
-
 import java.awt.*;
 import java.awt.image.*;
 import java.util.ArrayList;
@@ -17,12 +13,12 @@ public class OverlayManager {
 
     public OverlayManager(int x, int y){
         this.types = new ArrayList<>();
-        this.types.add(WeatherType.Tmp2m);
-        this.types.add(WeatherType.Precip);
-        this.types.add(WeatherType.Pressure);
-        this.types.add(WeatherType.Wind);
+        this.types.add(WeatherType.TMP_2_M);
+        this.types.add(WeatherType.PRECIP);
+        this.types.add(WeatherType.PRESSURE);
+        this.types.add(WeatherType.WIND);
         this.opacity = new ArrayList<>(Arrays.asList((float)0.5, (float)0.5, (float)0.5, (float)0.5));
-        this.selected = WeatherType.Tmp2m;
+        this.selected = WeatherType.TMP_2_M;
         this.overlay = new BufferedImage(x, y, BufferedImage.TYPE_INT_ARGB);
 
     }
@@ -114,7 +110,7 @@ public class OverlayManager {
 
         //2. find a value s s.t. viewport * s = overlay. Assume same porportion,
         // so br.x * s should = overlay.getWidth() and y*s = height.
-        double scaleToOvl = (double)this.overlay.getWidth() / botRight.x ;
+        double scaleToOvl = this.overlay.getWidth() / botRight.x ;
 
         //3. tc * c, top left of tile image is now aligned with the overlay image.
         tileCoord.scale(scaleToOvl);

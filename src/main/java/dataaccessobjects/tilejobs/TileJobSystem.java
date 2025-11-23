@@ -15,14 +15,14 @@ import java.util.concurrent.*;
  *  threads
  */
 public class TileJobSystem {
-    private final ExecutorService executor;
     private final LinkedBlockingDeque<TileJob> queue = new LinkedBlockingDeque<>();
     private final Set<TileJob> processingJobs = Collections.synchronizedSet(new HashSet<>());
 
     public TileJobSystem(int numWorkers) {
-        executor = Executors.newFixedThreadPool(numWorkers);
-        for (int i = 0; i < numWorkers; i++) {
-            executor.submit(this::worker);
+        try (ExecutorService executor = Executors.newFixedThreadPool(numWorkers)) {
+            for (int i = 0; i < numWorkers; i++) {
+                executor.submit(this::worker);
+            }
         }
     }
 
@@ -33,7 +33,7 @@ public class TileJobSystem {
      */
     public void submitJob(TileJob job){
         processingJobs.add(job);
-        queue.offer(job);
+        queue.add(job);
     }
 
     private void processJob(TileJob job){

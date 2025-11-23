@@ -33,10 +33,10 @@ public class GradientLoader implements GradientLegendLoader {
         }
         for(WeatherType type: WeatherType.values()){
             try{
-                BufferedImage legend_img = null;
+                BufferedImage legendImg = null;
                 File imageFile = new File("img/legends/legend_" + type + ".png");
-                legend_img = ImageIO.read(imageFile);
-                legends.put(type, legend_img);
+                legendImg = ImageIO.read(imageFile);
+                legends.put(type, legendImg);
             } catch (RuntimeException | IOException e) {
                 legends.put(type, blank);
             }

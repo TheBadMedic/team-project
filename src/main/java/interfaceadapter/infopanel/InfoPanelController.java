@@ -9,7 +9,8 @@ public final class InfoPanelController {
     private final InfoPanelInputBoundary interactor;
     private final Timer debounce;
 
-    private double pendingLat, pendingLon;
+    private double pendingLat;
+    private double pendingLon;
     private int pendingZoom;
 
     public InfoPanelController(InfoPanelInputBoundary interactor) {

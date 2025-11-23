@@ -1,7 +1,5 @@
 package entity;
 
-//import org.openstreetmap.gui.jmapviewer.OsmMercator;
-
 import java.util.Objects;
 
 public class TileCoords {

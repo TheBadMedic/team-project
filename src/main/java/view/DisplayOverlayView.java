@@ -1,20 +1,18 @@
 package view;
 
 import constants.Constants;
-import interfaceadapter.weatherLayers.UpdateOverlayController;
 import interfaceadapter.weatherLayers.UpdateOverlaySizeController;
 import interfaceadapter.weatherLayers.UpdateOverlayViewModel;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.image.BufferedImage;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.Objects;
 
 public class DisplayOverlayView extends JPanel implements PropertyChangeListener {
-    private final UpdateOverlayViewModel view;
-    private final UpdateOverlaySizeController sizeController;
+    private final transient UpdateOverlayViewModel view;
+    private final transient UpdateOverlaySizeController sizeController;
     private final ImageIcon imageIcon;
 
     public DisplayOverlayView(UpdateOverlaySizeController sizeCont,

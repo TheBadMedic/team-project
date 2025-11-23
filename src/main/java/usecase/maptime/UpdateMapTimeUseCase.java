@@ -1,6 +1,5 @@
 package usecase.maptime;
 
-
 import entity.ProgramTime;
 import usecase.weatherLayers.update.UpdateOverlayUseCase;
 

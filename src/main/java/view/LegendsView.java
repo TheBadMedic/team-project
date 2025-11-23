@@ -5,20 +5,19 @@ import interfaceadapter.weatherLayers.LegendViewModel;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.image.BufferedImage;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
 public class LegendsView extends JPanel implements PropertyChangeListener {
     private final ImageIcon imageIcon;
-    private final LegendViewModel legendView;
-    private final JLabel label;
+    private final transient LegendViewModel legendView;
+
     public LegendsView(LegendViewModel legendView){
         this.legendView = legendView;
         legendView.addPropertyChangeListener(this);
 
         imageIcon = new ImageIcon();
-        label = new JLabel();
+        JLabel label = new JLabel();
         label.setIcon(imageIcon);
         this.add(label);
     }

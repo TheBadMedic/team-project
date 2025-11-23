@@ -57,7 +57,6 @@ public final class UpdateOverlayUseCase implements UpdateOverlayInputBoundary, T
         overlayManager.clear(topLeft, botRight, zoom);
         for(int i = 0; i < visibleTilesX; i++){
             for(int j = 0; j < visibleTilesY; j++) {
-                //TODO looping? ((i % 2^zoom) + 2^zoom) % 2^zoom, j...
                 int x = (int) topLeft.x + i;
                 int y = (int) topLeft.y + j;
                 if (x >= 0 && x < Math.pow(2, zoom) && y >= 0 && y < Math.pow(2, zoom)) {
