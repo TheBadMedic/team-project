@@ -37,7 +37,7 @@ public class UpdateMapTimeUseCaseTest {
 
         UpdateMapTimeInputData updateMapTimeInputData = new UpdateMapTimeInputData(mockTime);
 
-        updateMapTimeUseCase.execute(updateMapTimeInputData);
+        updateMapTimeUseCase.setProgramTime(updateMapTimeInputData);
 
         verify(updateOverlayUseCase).update();
 
@@ -67,7 +67,7 @@ public class UpdateMapTimeUseCaseTest {
 
         TickMapTimeInputData tickMapTimeInputData = new TickMapTimeInputData(ticks);
 
-        updateMapTimeUseCase.execute(tickMapTimeInputData);
+        updateMapTimeUseCase.incrementProgramTimePerTick(tickMapTimeInputData);
 
         verify(updateOverlayUseCase).update();
 
@@ -101,7 +101,7 @@ public class UpdateMapTimeUseCaseTest {
 
         TickMapTimeInputData tickMapTimeInputData = new TickMapTimeInputData(ticks);
 
-        updateMapTimeUseCase.execute(tickMapTimeInputData);
+        updateMapTimeUseCase.incrementProgramTimePerTick(tickMapTimeInputData);
 
         verify(updateOverlayUseCase).update();
 

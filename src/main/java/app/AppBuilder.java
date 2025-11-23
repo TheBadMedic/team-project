@@ -140,7 +140,9 @@ public class AppBuilder {
     public AppBuilder createOverlayView(){
         UpdateOverlaySizeUseCase updateOverlaySizeUseCase;
         updateOverlaySizeUseCase = new UpdateOverlaySizeUseCase(overlayManager, viewport);
-        UpdateOverlaySizeController sizeController = new UpdateOverlaySizeController(updateOverlaySizeUseCase, updateOverlayUseCase);
+        UpdateOverlaySizeController sizeController = new UpdateOverlaySizeController(
+                updateOverlaySizeUseCase,
+                updateOverlayUseCase);
         weatherOverlayView = new DisplayOverlayView(sizeController, overlayViewModel);
         return this;
     }
@@ -156,7 +158,6 @@ public class AppBuilder {
         mapOverlayStructure.addPropertyChangeListener(weatherOverlayView);
         mapOverlayStructure.addComponent(panAndZoomView, 1);
         mapOverlayStructure.addComponent(weatherOverlayView, 2);
-        //...
         borderPanel.add(mapOverlayStructure, BorderLayout.CENTER);
         return this;
     }
@@ -187,12 +188,12 @@ public class AppBuilder {
     public AppBuilder addUpdateOverlayUseCase(){
         overlayViewModel = new UpdateOverlayViewModel();
         final UpdateOverlayOutputBoundary output = new UpdateOverlayPresenter(overlayViewModel);
-         updateOverlayUseCase = new UpdateOverlayUseCase(
+        updateOverlayUseCase = new UpdateOverlayUseCase(
                 overlayManager,
                 CachedTileRepository.getInstance(),
                 programTime,
-                 viewport,
-                 output
+                viewport,
+                output
         );
         return this;
     }

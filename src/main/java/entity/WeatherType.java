@@ -1,7 +1,7 @@
 package entity;
 
 public enum WeatherType {
-    TMP_2_M,
+    TMP2M,
     PRECIP,
     PRESSURE,
     WIND,
