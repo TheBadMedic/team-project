@@ -11,6 +11,6 @@ public class ChangeOpacityUseCase implements ChangeOpacityInputboundary{
 
     @Override
     public void change(ChangeOpacityInputData data){
-        this.overlayManager.setSelectedOpacity(data.getOpacity());
+        this.overlayManager.setSelectedOpacity(Math.max(0, Math.min(1,data.getOpacity())));
     }
 }
