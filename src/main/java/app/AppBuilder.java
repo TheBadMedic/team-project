@@ -2,9 +2,7 @@ package app;
 
 import javax.swing.*;
 import java.awt.*;
-import java.nio.file.Paths;
 import java.time.Instant;
-import java.util.List;
 
 import constants.Constants;
 import dataaccessinterface.BookmarkedLocationStorage;
@@ -102,6 +100,11 @@ public class AppBuilder {
     private RemoveBookmarkOutputBoundary removeBookmarkPresenter;
     private ListBookmarksPresenter listBookmarksPresenter;
 
+    private InfoPanelViewModel infoPanelViewModel;
+    private InfoPanelInteractor infoPanelInteractor;
+    private InfoPanelPresenter infoPanelPresenter;
+    private InfoPanelController infoPanelController;
+
 
 
     public AppBuilder() {
@@ -110,32 +113,33 @@ public class AppBuilder {
     }
 
     public AppBuilder addInfoPanelView(){
-        infoPanelViewModel = new InfoPanelViewModel();
-        infoPanelController = new InfoPanelController();
-        infoPanelUseCase = new InfoPanelInteractor();
-        infoPanelView = new InfoPanelView();
-        borderPanel.add(bookmarksView, BorderLayout.WEST);
+//        infoPanelViewModel = new InfoPanelViewModel();
+//        infoPanelController = new InfoPanelController();
+//        infoPanelInteractor = new InfoPanelInteractor();
+//        infoPanelView = new InfoPanelView();
+//        borderPanel.add(bookmarksView, BorderLayout.WEST);
+//        return this;
         return this;
     }
 
     public AppBuilder addBookmarkView(){
 
-        bookmarksViewModel = new BookmarksViewModel();
-        removeBookmarkPresenter = new RemoveBookmarkPresenter(bookmarksViewModel);
-        listBookmarksPresenter = new ListBookmarksPresenter(bookmarksViewModel);
-        addBookmarkPresenter = new AddBookmarkPresenter(bookmarksViewModel);
-        addBookmarkUseCase = new AddBookmarkUseCase(bookmarkStorage, addBookmarkPresenter);
-        removeBookmarkUseCase = new RemoveBookmarkUseCase(bookmarkStorage, removeBookmarkPresenter);
-        listBookmarksUseCase = new ListBookmarksUseCase(bookmarkStorage, listBookmarksPresenter);
-
-        ;
-        addBookmarkController = new AddBookmarkController(addBookmarkUseCase);
-        removeBookmarkController = new RemoveBookmarkController(removeBookmarkUseCase);
-        listBookmarksController = new ListBookmarksController(listBookmarksUseCase);
-        bookmarksView = new BookmarksView(bookmarksViewModel, addBookmarkController, removeBookmarkController,
-                listBookmarksController);
-        borderPanel.add(bookmarksView, BorderLayout.EAST);
-
+//        bookmarksViewModel = new BookmarksViewModel();
+//        removeBookmarkPresenter = new RemoveBookmarkPresenter(bookmarksViewModel);
+//        listBookmarksPresenter = new ListBookmarksPresenter(bookmarksViewModel);
+//        addBookmarkPresenter = new AddBookmarkPresenter(bookmarksViewModel);
+//        addBookmarkUseCase = new AddBookmarkUseCase(bookmarkStorage, addBookmarkPresenter);
+//        removeBookmarkUseCase = new RemoveBookmarkUseCase(bookmarkStorage, removeBookmarkPresenter);
+//        listBookmarksUseCase = new ListBookmarksUseCase(bookmarkStorage, listBookmarksPresenter);
+//
+//
+//        addBookmarkController = new AddBookmarkController(addBookmarkUseCase);
+//        removeBookmarkController = new RemoveBookmarkController(removeBookmarkUseCase);
+//        listBookmarksController = new ListBookmarksController(listBookmarksUseCase);
+//        bookmarksView = new BookmarksView(bookmarksViewModel, addBookmarkController, removeBookmarkController,
+//                listBookmarksController);
+//        borderPanel.add(bookmarksView, BorderLayout.EAST);
+//
         return this;
     }
 

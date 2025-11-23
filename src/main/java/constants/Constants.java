@@ -10,6 +10,4 @@ public class Constants {
     public static final int DEFAULT_MAP_HEIGHT = 600;
     public static final Path BOOKMARK_DATA_PATH = Paths.get("data/bookmarks.json");
     public static final int ZOOM_THRESHOLD = 1000;
-
-    public Constants(){}
 }
