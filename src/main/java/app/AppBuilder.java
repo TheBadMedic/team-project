@@ -6,6 +6,7 @@ import java.time.Instant;
 
 import constants.Constants;
 import dataaccessinterface.BookmarkedLocationStorage;
+import dataaccessinterface.TileRepository;
 import dataaccessobjects.InDiskBookmarkStorage;
 import dataaccessobjects.OkHttpsPointWeatherGatewayXml;
 import entity.ProgramTime;
@@ -34,7 +35,6 @@ import usecase.bookmark.removebookmark.RemoveBookmarkInputBoundary;
 import usecase.bookmark.removebookmark.RemoveBookmarkOutputBoundary;
 import usecase.bookmark.removebookmark.RemoveBookmarkUseCase;
 import usecase.infopanel.InfoPanelInteractor;
-import usecase.infopanel.PointWeatherFetcher;
 import usecase.maptime.UpdateMapTimeInputBoundary;
 import usecase.weatherLayers.layers.*;
 import usecase.weatherLayers.update.UpdateOverlayOutputBoundary;
@@ -54,93 +54,74 @@ import usecase.mapinteraction.PanAndZoomInputBoundary;
 
 public class AppBuilder {
     private final JPanel borderPanel = new JPanel();
-    private final BorderLayout borderLayout = new BorderLayout();
-
     private DisplayOverlayView weatherOverlayView;
-
     private ProgramTimeView programTimeView;
     private ProgramTimeViewModel programTimeViewModel;
-
     private UpdateOverlayViewModel overlayViewModel;
-
-    private LegendsView legendsView;
     private LegendViewModel legendViewModel;
-
     private UpdateOverlayUseCase updateOverlayUseCase;
-
     private WeatherLayersViewModel weatherLayersViewModel;
     private ChangeWeatherLayersView changeWeatherView;
-    private ChangeOpacityUseCase changeOpacityUseCase;
-    private ChangeLayerUseCase changeLayerUseCase;
-    private UpdateOverlaySizeUseCase updateOverlaySizeUseCase;
-
-
-    private MapOverlayStructureView mapOverlayStructure;
-    private JMapViewer mapViewer = new JMapViewer();
-
+    private final JMapViewer mapViewer = new JMapViewer();
     // initialising core entities
     private final ProgramTime programTime = new ProgramTime(Instant.now());
-    private final TileRepository tileRepository = new CachedTileRepository(Constants.CACHE_SIZE);
     private final OverlayManager overlayManager = new OverlayManager(Constants.DEFAULT_MAP_WIDTH,
             Constants.DEFAULT_MAP_HEIGHT);
     private final Viewport viewport = new Viewport(000,000,Constants.DEFAULT_MAP_WIDTH,
             0, 6, 0, 584);
     private final BookmarkedLocationStorage bookmarkStorage = new InDiskBookmarkStorage(Constants.BOOKMARK_DATA_PATH);
-
     private PanAndZoomView panAndZoomView;
-    private MapViewModel mapViewModel;
-    private PanAndZoomPresenter panAndZoomPresenter;
-    private PanAndZoomInputBoundary panAndZoomUseCase;
-    private PanAndZoomController panAndZoomController;
-    private BookmarksViewModel bookmarksViewModel;
     private BookmarksView bookmarksView;
-    private AddBookmarkInputBoundary addBookmarkUseCase;
-    private RemoveBookmarkInputBoundary removeBookmarkUseCase;
-    private ListBookmarksInputBoundary listBookmarksUseCase;
-    private AddBookmarkOutputBoundary addBookmarkPresenter;
-    private RemoveBookmarkOutputBoundary removeBookmarkPresenter;
-    private ListBookmarksPresenter listBookmarksPresenter;
-
-    private InfoPanelViewModel infoPanelViewModel;
-    private InfoPanelInteractor infoPanelInteractor;
     private InfoPanelPresenter infoPanelPresenter;
-    private InfoPanelController infoPanelController;
-
 
 
     public AppBuilder() {
+        BorderLayout borderLayout = new BorderLayout();
         borderPanel.setLayout(borderLayout);
         borderPanel.setPreferredSize(new Dimension(Constants.DEFAULT_PROGRAM_WIDTH, Constants.DEFAULT_PROGRAM_HEIGHT));
     }
 
     public AppBuilder addInfoPanelView(){
+//        InfoPanelView infoPanelView;
+//        InfoPanelController infoPanelController;
+//        InfoPanelViewModel infoPanelViewModel;
+//        InfoPanelInteractor infoPanelInteractor;
 //        infoPanelViewModel = new InfoPanelViewModel();
 //        infoPanelController = new InfoPanelController();
 //        infoPanelInteractor = new InfoPanelInteractor();
 //        infoPanelView = new InfoPanelView();
-//        borderPanel.add(bookmarksView, BorderLayout.WEST);
-//        return this;
+//        borderPanel.add(infoPanelView, BorderLayout.WEST);
         return this;
     }
 
     public AppBuilder addBookmarkView(){
+        ListBookmarksPresenter listBookmarksPresenter;
+        RemoveBookmarkOutputBoundary removeBookmarkPresenter;
+        AddBookmarkOutputBoundary addBookmarkPresenter;
+        ListBookmarksInputBoundary listBookmarksUseCase;
+        RemoveBookmarkInputBoundary removeBookmarkUseCase;
+        AddBookmarkInputBoundary addBookmarkUseCase;
+        BookmarksViewModel bookmarksViewModel;
+        AddBookmarkController addBookmarkController;
+        RemoveBookmarkController removeBookmarkController;
+        ListBookmarksController listBookmarksController;
 
-//        bookmarksViewModel = new BookmarksViewModel();
-//        removeBookmarkPresenter = new RemoveBookmarkPresenter(bookmarksViewModel);
-//        listBookmarksPresenter = new ListBookmarksPresenter(bookmarksViewModel);
-//        addBookmarkPresenter = new AddBookmarkPresenter(bookmarksViewModel);
-//        addBookmarkUseCase = new AddBookmarkUseCase(bookmarkStorage, addBookmarkPresenter);
-//        removeBookmarkUseCase = new RemoveBookmarkUseCase(bookmarkStorage, removeBookmarkPresenter);
-//        listBookmarksUseCase = new ListBookmarksUseCase(bookmarkStorage, listBookmarksPresenter);
-//
-//
-//        addBookmarkController = new AddBookmarkController(addBookmarkUseCase);
-//        removeBookmarkController = new RemoveBookmarkController(removeBookmarkUseCase);
-//        listBookmarksController = new ListBookmarksController(listBookmarksUseCase);
-//        bookmarksView = new BookmarksView(bookmarksViewModel, addBookmarkController, removeBookmarkController,
-//                listBookmarksController);
-//        borderPanel.add(bookmarksView, BorderLayout.EAST);
-//
+        bookmarksViewModel = new BookmarksViewModel();
+        removeBookmarkPresenter = new RemoveBookmarkPresenter(bookmarksViewModel);
+        listBookmarksPresenter = new ListBookmarksPresenter(bookmarksViewModel);
+        addBookmarkPresenter = new AddBookmarkPresenter(bookmarksViewModel);
+        addBookmarkUseCase = new AddBookmarkUseCase(bookmarkStorage, addBookmarkPresenter);
+        removeBookmarkUseCase = new RemoveBookmarkUseCase(bookmarkStorage, removeBookmarkPresenter);
+        listBookmarksUseCase = new ListBookmarksUseCase(bookmarkStorage, listBookmarksPresenter);
+
+
+        addBookmarkController = new AddBookmarkController(addBookmarkUseCase);
+        removeBookmarkController = new RemoveBookmarkController(removeBookmarkUseCase);
+        listBookmarksController = new ListBookmarksController(listBookmarksUseCase);
+        bookmarksView = new BookmarksView(bookmarksViewModel, addBookmarkController, removeBookmarkController,
+                listBookmarksController);
+        borderPanel.add(bookmarksView, BorderLayout.EAST);
+
         return this;
     }
 
@@ -159,6 +140,7 @@ public class AppBuilder {
     }
 
     public AppBuilder createOverlayView(){
+        UpdateOverlaySizeUseCase updateOverlaySizeUseCase;
         updateOverlaySizeUseCase = new UpdateOverlaySizeUseCase(overlayManager, viewport);
         UpdateOverlaySizeController sizeController = new UpdateOverlaySizeController(updateOverlaySizeUseCase, updateOverlayUseCase);
         weatherOverlayView = new DisplayOverlayView(sizeController, overlayViewModel);
@@ -170,6 +152,7 @@ public class AppBuilder {
      * @return this
      */
     public AppBuilder addMapOverlayView(){
+        MapOverlayStructureView mapOverlayStructure;
         
         mapOverlayStructure = new MapOverlayStructureView();
         mapOverlayStructure.addPropertyChangeListener(weatherOverlayView);
@@ -181,6 +164,7 @@ public class AppBuilder {
     }
 
     public AppBuilder addLegendView(){
+        LegendsView legendsView;
         legendViewModel = new LegendViewModel();
         legendsView = new LegendsView(legendViewModel);
         borderPanel.add(legendsView, BorderLayout.NORTH);
@@ -188,6 +172,8 @@ public class AppBuilder {
     }
 
     public AppBuilder addWeatherLayersUseCase(){
+        ChangeLayerUseCase changeLayerUseCase;
+        ChangeOpacityUseCase changeOpacityUseCase;
         ChangeLayerOutputBoundary layerOutputBoundary = new WeatherLayersPresenter(weatherLayersViewModel);
         UpdateLegendOutputBoundary legendOutputBoundary = new LegendPresenter(legendViewModel);
         changeLayerUseCase = new ChangeLayerUseCase(overlayManager, layerOutputBoundary, legendOutputBoundary);
@@ -230,6 +216,10 @@ public class AppBuilder {
         return this;
     }
     public AppBuilder addPanZoomView() {
+        PanAndZoomController panAndZoomController;
+        PanAndZoomInputBoundary panAndZoomUseCase;
+        PanAndZoomPresenter panAndZoomPresenter;
+        MapViewModel mapViewModel;
         mapViewModel = new MapViewModel();
         panAndZoomView = new PanAndZoomView(mapViewModel, mapViewer);
         panAndZoomPresenter = new PanAndZoomPresenter(
