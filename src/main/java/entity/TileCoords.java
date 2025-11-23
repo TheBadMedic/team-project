@@ -19,16 +19,6 @@ public class TileCoords {
 
     public int getZoom(){return this.zoom;}
 
-    public Location getLatLong() {
-//        OsmMercator merc = new OsmMercator(256);
-        int px = x * 256 + 128;
-        int py = y * 256 + 128;
-//        double lon = merc.xToLon(px, zoom);
-//        double lat = merc.yToLat(py, zoom);
-//        return new Location(lat, lon);
-        return null;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (o instanceof TileCoords) {
