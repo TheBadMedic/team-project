@@ -19,11 +19,16 @@ public class TileJobSystem {
     private final Set<TileJob> processingJobs = Collections.synchronizedSet(new HashSet<>());
 
     public TileJobSystem(int numWorkers) {
-        try (ExecutorService executor = Executors.newFixedThreadPool(numWorkers)) {
+        ExecutorService executor = Executors.newFixedThreadPool(numWorkers);
+        try {
             for (int i = 0; i < numWorkers; i++) {
                 executor.submit(this::worker);
             }
         }
+        finally {
+            executor.shutdown();
+        }
+
     }
 
     /**
