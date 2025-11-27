@@ -1,9 +1,11 @@
 package entity;
 
+import constants.Constants;
+
 import java.awt.*;
 import java.awt.image.*;
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.List;
 
 public class OverlayManager {
     private final ArrayList<WeatherType> types;
@@ -12,15 +14,17 @@ public class OverlayManager {
     private BufferedImage overlay;
 
     public OverlayManager(int x, int y){
-        this.types = new ArrayList<>();
-        this.types.add(WeatherType.Tmp2m);
-        this.types.add(WeatherType.Precip);
-        this.types.add(WeatherType.Pressure);
-        this.types.add(WeatherType.Wind);
-        this.opacity = new ArrayList<>(Arrays.asList((float)0.5, (float)0.5, (float)0.5, (float)0.5));
-        this.selected = WeatherType.Tmp2m;
+        this.types = new ArrayList<>(List.of(WeatherType.values()));
+        this.opacity = new ArrayList<>();
+        initOpacityList();
+        this.selected = WeatherType.values()[0];
         this.overlay = new BufferedImage(x, y, BufferedImage.TYPE_INT_ARGB);
+    }
 
+    private void initOpacityList(){
+        for (int i = 0 ; i < types.size(); i++){
+            this.opacity.add(Constants.DEFAULT_OPACITY);
+        }
     }
 
     public void changeSize(Dimension size){
