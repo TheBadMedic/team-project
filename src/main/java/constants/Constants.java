@@ -24,6 +24,7 @@ public class Constants {
     public static final int ZOOM_THRESHOLD = 1000;
     public static final int TILE_FETCH_WORKERS = 8;
     public static final float DEFAULT_OPACITY = (float)0.5;
+    public static final int MAX_WEATHERTILE_ZOOM = 6;
 
     private Constants() { // intentionally empty }
 }

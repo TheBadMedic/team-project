@@ -1,5 +1,6 @@
 package usecase.weatherlayers.update;
 
+import constants.Constants;
 import dataaccessinterface.TileNotFoundException;
 import dataaccessinterface.TileRepository;
 import dataaccessobjects.tilejobs.TileCompletedListener;
@@ -28,13 +29,13 @@ public final class UpdateOverlayUseCase implements UpdateOverlayInputBoundary, T
 
     public void update(){
         int zoom = this.viewport.getZoomLevel();
-        if (zoom > 10){
+        if (zoom > Constants.MAX_WEATHERTILE_ZOOM + 4){
             //with current tiling implemetation zooming in too much will cause a crash due to scaling an image too much,
             //so skip drawing overlay if too zoomed in.
             this.overlayManager.clearAll();
             return;
         }
-        zoom = (int)Math.max(0, Math.min(6,zoom / 1.5));
+        zoom = (int)Math.max(0, Math.min(Constants.MAX_WEATHERTILE_ZOOM ,zoom / 1.5));
         BoundingBox bBox = this.viewport.calculateBBox();
 
         //Convert to tile coords,
