@@ -10,9 +10,9 @@ import java.io.IOException;
 import java.util.EnumMap;
 
 
-public class GradientLoader implements GradientLegendLoader {
+public class InDiskGradientLoader implements GradientLegendLoader {
     private final EnumMap<WeatherType, BufferedImage> legends;
-    public GradientLoader(){
+    public InDiskGradientLoader(){
         legends = new EnumMap<>(WeatherType.class);
         loadLegends();
     }

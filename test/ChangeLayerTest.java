@@ -1,3 +1,4 @@
+import dataaccessobjects.InDiskGradientLoader;
 import entity.LayerNotFoundException;
 import entity.OverlayManager;
 import entity.WeatherType;
@@ -18,7 +19,7 @@ public class ChangeLayerTest {
     private ChangeLayerOutputBoundary presenter = new WeatherLayersPresenter(vm);
     private LegendViewModel lVm = new LegendViewModel();
     private LegendPresenter legendPresenter = new LegendPresenter(lVm);
-    private ChangeLayerUseCase useCase = new ChangeLayerUseCase(om, presenter, legendPresenter);
+    private ChangeLayerUseCase useCase = new ChangeLayerUseCase(om, presenter, legendPresenter, new InDiskGradientLoader());
 
     @Test
     void changeType(){

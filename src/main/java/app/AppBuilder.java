@@ -6,8 +6,8 @@ import java.time.Instant;
 
 import constants.Constants;
 import dataaccessinterface.BookmarkedLocationStorage;
-import dataaccessobjects.InDiskBookmarkStorage;
-import dataaccessobjects.OkHttpsPointWeatherGatewayXml;
+import dataaccessinterface.GradientLegendLoader;
+import dataaccessobjects.*;
 
 import entity.ProgramTime;
 import entity.Viewport;
@@ -24,9 +24,6 @@ import interfaceadapter.bookmark.listbookmark.ListBookmarksController;
 import interfaceadapter.bookmark.listbookmark.ListBookmarksPresenter;
 import interfaceadapter.bookmark.removebookmark.RemoveBookmarkController;
 import interfaceadapter.bookmark.removebookmark.RemoveBookmarkPresenter;
-import interfaceadapter.infopanel.InfoPanelController;
-import interfaceadapter.infopanel.InfoPanelPresenter;
-import interfaceadapter.infopanel.InfoPanelViewModel;
 import interfaceadapter.maptime.programtime.ProgramTimeController;
 import interfaceadapter.maptime.programtime.ProgramTimePresenter;
 import interfaceadapter.maptime.timeanimation.TimeAnimationController;
@@ -40,8 +37,6 @@ import usecase.bookmark.listbookmark.ListBookmarksUseCase;
 import usecase.bookmark.removebookmark.RemoveBookmarkInputBoundary;
 import usecase.bookmark.removebookmark.RemoveBookmarkOutputBoundary;
 import usecase.bookmark.removebookmark.RemoveBookmarkUseCase;
-import usecase.infopanel.InfoPanelInteractor;
-import usecase.infopanel.PointWeatherFetcher;
 import usecase.maptime.UpdateMapTimeInputBoundary;
 import usecase.weatherlayers.layers.*;
 import usecase.weatherlayers.update.UpdateOverlayOutputBoundary;
@@ -51,7 +46,6 @@ import usecase.maptime.UpdateMapTimeOutputBoundary;
 import usecase.maptime.UpdateMapTimeUseCase;
 import view.*;
 import interfaceadapter.maptime.programtime.ProgramTimeViewModel;
-import dataaccessobjects.CachedTileRepository;
 import entity.OverlayManager;
 import interfaceadapter.mapinteraction.MapViewModel;
 import interfaceadapter.mapinteraction.PanAndZoomController;
@@ -59,7 +53,6 @@ import interfaceadapter.mapinteraction.PanAndZoomPresenter;
 import usecase.mapinteraction.PanAndZoomUseCase;
 import usecase.mapinteraction.PanAndZoomInputBoundary;
 import dataaccessinterface.SavedMapOverlaySettings;
-import dataaccessobjects.InDiskMapOverlaySettingsStorage;
 import interfaceadapter.mapsettings.loadmapsettings.AutoLoadMapSettingsPresenter;
 import interfaceadapter.mapsettings.loadmapsettings.LoadMapSettingsController;
 import interfaceadapter.mapsettings.savemapsettings.SaveMapSettingsController;
@@ -249,7 +242,9 @@ public class AppBuilder {
             }
         };
         UpdateLegendOutputBoundary legendOutputBoundary = new LegendPresenter(legendViewModel);
-        changeLayerUseCase = new ChangeLayerUseCase(overlayManager, layerOutputBoundaryWrapper, legendOutputBoundary);
+        GradientLegendLoader fromDisk = new InDiskGradientLoader();
+        changeLayerUseCase = new ChangeLayerUseCase(overlayManager, layerOutputBoundaryWrapper, legendOutputBoundary,
+                fromDisk);
         changeOpacityUseCase = new ChangeOpacityUseCase(overlayManager);
         WeatherLayersController layersController = new WeatherLayersController(changeLayerUseCase, changeOpacityUseCase);
         changeWeatherView.addLayerController(layersController);
