@@ -3,11 +3,15 @@ package interfaceadapter.mapsettings.loadmapsettings;
 import entity.LayerNotFoundException;
 import entity.Viewport;
 import entity.WeatherType;
+import org.openstreetmap.gui.jmapviewer.JMapViewer;
 import org.openstreetmap.gui.jmapviewer.OsmMercator;
 import usecase.mapsettings.loadmapsettings.LoadMapSettingsOutputBoundary;
 import usecase.mapsettings.loadmapsettings.LoadMapSettingsOutputData;
 import usecase.weatherlayers.layers.ChangeLayerInputBoundary;
 import usecase.weatherlayers.layers.ChangeLayerInputData;
+import view.ChangeWeatherLayersView;
+
+import java.awt.Point;
 
 /**
  * Presenter for automatically loading map settings on startup.
@@ -17,6 +21,8 @@ public final class AutoLoadMapSettingsPresenter implements LoadMapSettingsOutput
 
     private final Viewport viewport;
     private final ChangeLayerInputBoundary changeLayerUseCase;
+    private final JMapViewer mapViewer;
+    private final ChangeWeatherLayersView weatherLayersView;
     private static final OsmMercator MERCATOR = OsmMercator.MERCATOR_256;
 
     /**
@@ -24,11 +30,17 @@ public final class AutoLoadMapSettingsPresenter implements LoadMapSettingsOutput
      *
      * @param viewport the viewport to update
      * @param changeLayerUseCase use case for changing the weather layer
+     * @param mapViewer the map viewer to update with zoom level and center
+     * @param weatherLayersView the weather layers view to update the dropdown selection
      */
     public AutoLoadMapSettingsPresenter(Viewport viewport,
-                                        ChangeLayerInputBoundary changeLayerUseCase) {
+                                        ChangeLayerInputBoundary changeLayerUseCase,
+                                        JMapViewer mapViewer,
+                                        ChangeWeatherLayersView weatherLayersView) {
         this.viewport = viewport;
         this.changeLayerUseCase = changeLayerUseCase;
+        this.mapViewer = mapViewer;
+        this.weatherLayersView = weatherLayersView;
     }
 
     @Override
@@ -47,16 +59,23 @@ public final class AutoLoadMapSettingsPresenter implements LoadMapSettingsOutput
         viewport.setPixelCenterX((int) pixelX);
         viewport.setPixelCenterY((int) pixelY);
 
-        // Update weather layer if a saved type exists
+        if (mapViewer != null) {
+            mapViewer.setZoom(zoomLevel);
+            mapViewer.setCenter(new Point((int) pixelX, (int) pixelY));
+        }
+
         if (weatherType != null) {
             try {
                 changeLayerUseCase.change(new ChangeLayerInputData(weatherType));
+
+                if (weatherLayersView != null) {
+                    weatherLayersView.setSelectedWeatherType(weatherType);
+                }
             } catch (LayerNotFoundException e) {
-                // If the layer doesn't exist ignore it
+ 
             }
         }
 
-        // Fire property change to notify listeners
         viewport.getSupport().firePropertyChange("viewportUpdated", null, viewport);
     }
 

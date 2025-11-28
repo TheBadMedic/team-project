@@ -1,10 +1,6 @@
 {
-  "zoomLevel": 6,
-  "weatherType": "Tmp2m",
-  "centerLatitude": 35.79999392988527,
-  "centerLongitude": 5.6689453125
-  "zoomLevel": 2,
-  "weatherType": "Tmp2m",
-  "centerLatitude": 23.563987128451217,
-  "centerLongitude": 51.6796875
+  "zoomLevel": 3,
+  "weatherType": "TMP2M",
+  "centerLatitude": -2.460181181020993,
+  "centerLongitude": 1.40625
 }

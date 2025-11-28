@@ -91,4 +91,25 @@ public class ChangeWeatherLayersView extends JPanel{
     public void addUpdateController (UpdateOverlayController cont){
         this.updateController = cont;
     }
+
+    /**
+     * Sets the selected weather type in the dropdown without triggering the action listener.
+     * This is used when loading saved settings on startup.
+     *
+     * @param weatherType the weather type to select
+     */
+    public void setSelectedWeatherType(WeatherType weatherType) {
+        if (weatherType != null && weatherDropdown != null) {
+
+            var listeners = weatherDropdown.getActionListeners();
+            for (var listener : listeners) {
+                weatherDropdown.removeActionListener(listener);
+            }
+            weatherDropdown.setSelectedItem(weatherType);
+
+            for (var listener : listeners) {
+                weatherDropdown.addActionListener(listener);
+            }
+        }
+    }
 }

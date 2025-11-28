@@ -363,10 +363,11 @@ public AppBuilder addSearchBarView() {
      * Sets up map settings persistence (save/load).
      */
     public AppBuilder addMapSettingsPersistence() {
-        // Create presenter that applies settings directly to viewport and overlay manager
         AutoLoadMapSettingsPresenter autoLoadPresenter = new AutoLoadMapSettingsPresenter(
                 viewport,
-                changeLayerUseCase
+                changeLayerUseCase,
+                mapViewer,
+                changeWeatherView
         );
         
         loadMapSettingsUseCase = new LoadMapSettingsUseCase(mapSettingsStorage, autoLoadPresenter);
