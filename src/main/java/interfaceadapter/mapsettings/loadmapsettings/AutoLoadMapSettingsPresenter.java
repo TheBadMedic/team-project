@@ -50,10 +50,8 @@ public final class AutoLoadMapSettingsPresenter implements LoadMapSettingsOutput
         int zoomLevel = outputData.getZoomLevel();
         WeatherType weatherType = outputData.getWeatherType();
 
-        // Update viewport zoom level
         viewport.setZoomLevel(zoomLevel);
 
-        // Convert lat/lon to pixel coordinates and update viewport center
         double pixelX = MERCATOR.lonToX(longitude, zoomLevel);
         double pixelY = MERCATOR.latToY(latitude, zoomLevel);
         viewport.setPixelCenterX((int) pixelX);
@@ -72,7 +70,7 @@ public final class AutoLoadMapSettingsPresenter implements LoadMapSettingsOutput
                     weatherLayersView.setSelectedWeatherType(weatherType);
                 }
             } catch (LayerNotFoundException e) {
- 
+                // Ignore if saved weather layer no longer exists, continue with default settings
             }
         }
 
