@@ -54,7 +54,6 @@ public final class InDiskMapOverlaySettingsStorage implements SavedMapOverlaySet
                     && obj.has(KEY_ZOOM_LEVEL);
             // weatherType is optional for backward compatibility
         } catch (IOException e) {
-            // On read failure, just behave as if there are no saved settings.
             return false;
         }
     }
