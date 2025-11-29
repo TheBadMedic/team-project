@@ -40,7 +40,7 @@ public class ChangeWeatherLayersView extends JPanel{
         );
 
         //drop down menu for basemap options
-        if (System.getenv("API_KEY") != null) {
+        if (System.getenv("THUNDERFOREST_KEY") != null) {
             JComboBox<TileSource> basemapDropdown = getTileSourceJComboBox(mapViewer);
             this.add(basemapDropdown);
         }
@@ -93,23 +93,10 @@ public class ChangeWeatherLayersView extends JPanel{
     }
 
     /**
-     * Sets the selected weather type in the dropdown without triggering the action listener.
-     * This is used when loading saved settings on startup.
-     *
-     * @param weatherType the weather type to select
+     * set initial selection on startup
      */
-    public void setSelectedWeatherType(WeatherType weatherType) {
-        if (weatherType != null && weatherDropdown != null) {
-
-            var listeners = weatherDropdown.getActionListeners();
-            for (var listener : listeners) {
-                weatherDropdown.removeActionListener(listener);
-            }
-            weatherDropdown.setSelectedItem(weatherType);
-
-            for (var listener : listeners) {
-                weatherDropdown.addActionListener(listener);
-            }
-        }
+    public void matchWeather(WeatherType type){
+        weatherDropdown.setSelectedItem(type);
     }
+
 }

@@ -45,9 +45,9 @@ public class MapOverlayStructureView extends JLayeredPane{
     }
 
     public void fireSizeChange(){
-        Dimension newSize = this.getSize();
-        support.firePropertyChange("size", size, newSize);
-        size = newSize;
+            Dimension newSize = this.getSize();
+            support.firePropertyChange("size", size, newSize);
+            size = newSize;
     }
 
     public void addComponent(JPanel component, int layer){

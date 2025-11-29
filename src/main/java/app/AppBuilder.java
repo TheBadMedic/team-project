@@ -16,6 +16,7 @@ import constants.Constants;
 import dataaccessinterface.BookmarkedLocationStorage;
 import dataaccessobjects.InDiskBookmarkStorage;
 
+import dataaccessobjects.InDiskGradientLoader;
 import entity.ProgramTime;
 import entity.Viewport;
 import entity.Location;
@@ -93,14 +94,15 @@ public class AppBuilder {
     private WeatherLayersViewModel weatherLayersViewModel;
     private ChangeWeatherLayersView changeWeatherView;
     private ChangeLayerUseCase changeLayerUseCase;
+    private MapOverlayStructureView mapOverlayStructure;
+
     private final JMapViewer mapViewer = new JMapViewer();
 
     // initialising core entities
     private final ProgramTime programTime = new ProgramTime(Instant.now());
     private final OverlayManager overlayManager = new OverlayManager(Constants.DEFAULT_MAP_WIDTH,
             Constants.DEFAULT_MAP_HEIGHT);
-    private final Viewport viewport = new Viewport(
-            000,000,Constants.DEFAULT_MAP_WIDTH,
+    private final Viewport viewport = new Viewport(0,0,Constants.DEFAULT_MAP_WIDTH,
             0, 6, 0, 584);
     private final BookmarkedLocationStorage bookmarkStorage = new InDiskBookmarkStorage(Constants.BOOKMARK_DATA_PATH);
     private final SavedMapOverlaySettings mapSettingsStorage = new InDiskMapOverlaySettingsStorage(
@@ -128,8 +130,7 @@ public class AppBuilder {
     public AppBuilder() {
         BorderLayout borderLayout = new BorderLayout();
         borderPanel.setLayout(borderLayout);
-        borderPanel.setPreferredSize(new Dimension(Constants.DEFAULT_PROGRAM_WIDTH, Constants.DEFAULT_PROGRAM_HEIGHT));
-    }
+        }
 
 //    public AppBuilder addInfoPanelView(){
 //        infoPanelViewModel = new InfoPanelViewModel();
@@ -251,15 +252,12 @@ public AppBuilder addSearchBarView() {
      * @return this
      */
     public AppBuilder addMapOverlayView(){
-        MapOverlayStructureView mapOverlayStructure;
-        
         mapOverlayStructure = new MapOverlayStructureView();
         mapOverlayStructure.addPropertyChangeListener(weatherOverlayView);
         mapOverlayStructure.addPropertyChangeListener(panAndZoomView);
         mapOverlayStructure.addComponent(panAndZoomView, 1);
         mapOverlayStructure.addComponent(weatherOverlayView, 2);
         borderPanel.add(mapOverlayStructure, BorderLayout.CENTER);
-        mapOverlayStructure.fireSizeChange();
         return this;
     }
 
@@ -284,7 +282,8 @@ public AppBuilder addSearchBarView() {
             }
         };
         UpdateLegendOutputBoundary legendOutputBoundary = new LegendPresenter(legendViewModel);
-        changeLayerUseCase = new ChangeLayerUseCase(overlayManager, layerOutputBoundaryWrapper, legendOutputBoundary);
+        changeLayerUseCase = new ChangeLayerUseCase(overlayManager, layerOutputBoundaryWrapper, legendOutputBoundary,
+                new InDiskGradientLoader());
         changeOpacityUseCase = new ChangeOpacityUseCase(overlayManager);
         WeatherLayersController layersController = new WeatherLayersController(
                 changeLayerUseCase, changeOpacityUseCase);
@@ -377,7 +376,7 @@ public AppBuilder addSearchBarView() {
         
         loadMapSettingsController = new LoadMapSettingsController(loadMapSettingsUseCase);
         saveMapSettingsController = new SaveMapSettingsController(saveMapSettingsUseCase);
-        
+
         return this;
     }
     
@@ -430,8 +429,11 @@ public AppBuilder addSearchBarView() {
         // Load saved map settings on startup
         if (loadMapSettingsController != null) {
             loadMapSettingsController.loadMapSettings();
+            changeWeatherView.matchWeather(overlayManager.getSelected());
+            panAndZoomView.setMapLocation(viewport.getZoomLevel(),
+                    (int)viewport.getPixelCenterX(), (int)viewport.getPixelCenterY());
         }
-        
+
         // Save map settings when window is closing
         application.addWindowListener(new java.awt.event.WindowAdapter() {
             @Override
@@ -441,9 +443,8 @@ public AppBuilder addSearchBarView() {
                 }
             }
         });
-        
-        updateOverlayUseCase.update();
 
+        application.setSize(new Dimension(Constants.DEFAULT_PROGRAM_WIDTH, Constants.DEFAULT_PROGRAM_HEIGHT));
         return application;
     }
 

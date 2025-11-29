@@ -1,40 +1,55 @@
 package usecase.weatherlayers.updateoverlay;
 
+import dataaccessinterface.ImageLoader;
+import constants.Constants;
 import dataaccessinterface.TileNotFoundException;
 import dataaccessinterface.TileRepository;
+import dataaccessobjects.SimpleImageLoader;
 import dataaccessobjects.tilejobs.TileCompletedListener;
 import entity.*;
 
 import java.awt.image.BufferedImage;
+import java.io.IOException;
 
 public final class UpdateOverlayUseCase implements UpdateOverlayInputBoundary, TileCompletedListener  {
     private final OverlayManager overlayManager;
     private final TileRepository tileCache;
     private final ProgramTime time;
+    private final ImageLoader imageLoader;
+    private final BufferedImage loadingImage;
     private final Viewport viewport;
     private final ProgramTime programTime;
     private final UpdateOverlayOutputBoundary output;
-
     public UpdateOverlayUseCase(OverlayManager om, TileRepository tCache, ProgramTime time, Viewport vp,
                                 UpdateOverlayOutputBoundary output){
         this.overlayManager = om;
         this.tileCache = tCache;
         this.time = time;
+        this.imageLoader = new SimpleImageLoader();
+        this.loadingImage = getLoadingImage();
         this.viewport = vp;
         this.output = output;
         this.programTime = time;
         tileCache.addListener(this);
     }
 
+    private BufferedImage getLoadingImage(){
+        try {
+            return imageLoader.getImage("img/hourglass.png");
+        } catch (IOException e) {
+            return new BufferedImage(255, 255, BufferedImage.TYPE_3BYTE_BGR);
+        }
+    }
+
     public void update(){
         int zoom = this.viewport.getZoomLevel();
-        if (zoom > 10){
+        if (zoom > Constants.MAX_WEATHERTILE_ZOOM + 4){
             //with current tiling implemetation zooming in too much will cause a crash due to scaling an image too much,
             //so skip drawing overlay if too zoomed in.
             this.overlayManager.clearAll();
             return;
         }
-        zoom = (int)Math.max(0, Math.min(6,zoom / 1.5));
+        zoom = (int)Math.max(0, Math.min(Constants.MAX_WEATHERTILE_ZOOM ,zoom / 1.5));
         BoundingBox bBox = this.viewport.calculateBBox();
 
         //Convert to tile coords,
@@ -60,26 +75,39 @@ public final class UpdateOverlayUseCase implements UpdateOverlayInputBoundary, T
                 int x = (int) topLeft.x() + i;
                 int y = (int) topLeft.y() + j;
                 if (x >= 0 && x < Math.pow(2, zoom) && y >= 0 && y < Math.pow(2, zoom)) {
-                    TileCoords tc = new TileCoords(x, y, zoom);
-                    WeatherTile tile = new WeatherTile(tc, this.time.getCurrentTime(), this.overlayManager.getSelected());
-                    if (tileCache.inCache(tile)){
-                        BufferedImage imgData;
-                        try{
-                            imgData = tileCache.getTileImageData(tile);
-                        }
-                        catch (TileNotFoundException e){
-                            imgData = new BufferedImage(256, 256, BufferedImage.TYPE_3BYTE_BGR);
-                        }
-                        overlayManager.drawTileToOverlay(topLeft, botRight, tile, imgData);
-                    }
-                    else {
-                        tileCache.requestTile(tile, topLeft, botRight, viewport.getCentre(), programTime.getCurrentTime());
-                    }
+                    processTile(x, y, zoom, topLeft, botRight);
                 }
             }
         }
         output.updateImage(new UpdateOverlayOutputData(overlayManager.getOverlay()));
 
+    }
+
+    /**
+     * Based on the given tile coordinate, request the tile image from the cache,
+     * and if avalible, draw it to the overlay.
+     * @param x The tile's x coordinate
+     * @param y The tile's y coordinate
+     * @param zoom The tile's zoom level
+     * @param topLeft A vector representing the topleft location of the viewport, as normallized lat lon (0-1)
+     * @param botRight A vector representing the bottom right location of the viewport, as normallized lat lon (0-1)
+     */
+    private void processTile(int x, int y, int zoom, Vector topLeft, Vector botRight) {
+        TileCoords tc = new TileCoords(x, y, zoom);
+        WeatherTile tile = new WeatherTile(tc, this.time.getCurrentTime(), this.overlayManager.getSelected());
+        if (tileCache.inCache(tile)){
+            BufferedImage imgData;
+            try{
+                imgData = tileCache.getTileImageData(tile);
+            }
+            catch (TileNotFoundException e){
+                imgData = new BufferedImage(256, 256, BufferedImage.TYPE_3BYTE_BGR);
+            }
+            overlayManager.drawTileToOverlay(topLeft, botRight, tile, imgData);
+        }
+        else {
+            tileCache.requestTile(tile, topLeft, botRight, viewport.getCentre(), programTime.getCurrentTime());
+        }
     }
 
     @Override
@@ -88,7 +116,7 @@ public final class UpdateOverlayUseCase implements UpdateOverlayInputBoundary, T
             overlayManager.drawTileToOverlay(tile.getTopLeft(), tile.getBotRight(), tile.getWeatherTile(), tileImage);
             output.updateImage(new UpdateOverlayOutputData(overlayManager.getOverlay()));
         } else{
-            BufferedImage tileImg = new BufferedImage(256, 256, BufferedImage.TYPE_3BYTE_BGR);
+            BufferedImage tileImg = loadingImage;
             overlayManager.drawTileToOverlay(tile.getTopLeft(), tile.getBotRight(), tile.getWeatherTile(), tileImg);
             output.updateImage(new UpdateOverlayOutputData(overlayManager.getOverlay()));
         }
@@ -96,7 +124,7 @@ public final class UpdateOverlayUseCase implements UpdateOverlayInputBoundary, T
 
     @Override
     public void onTileFailed(IncompleteTile tile, TileNotFoundException e) {
-        BufferedImage tileImg = new BufferedImage(256, 256, BufferedImage.TYPE_3BYTE_BGR);
+        BufferedImage tileImg = loadingImage;
         overlayManager.drawTileToOverlay(tile.getTopLeft(), tile.getBotRight(), tile.getWeatherTile(), tileImg);
         output.updateImage(new UpdateOverlayOutputData(overlayManager.getOverlay()));
 

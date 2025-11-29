@@ -37,8 +37,10 @@ public class DisplayOverlayView extends JPanel implements PropertyChangeListener
     public void propertyChange(PropertyChangeEvent evt) {
         //Listener listening to size change in MapOverlayStructureView and listening to viewmodel's change.
         if(Objects.equals(evt.getPropertyName(), "size")) {
-            this.setBounds(new Rectangle((Dimension) evt.getNewValue()));
-            this.setSize((Dimension) evt.getNewValue());
+            Rectangle rect = new Rectangle((Dimension) evt.getNewValue());
+            //five pixel offset needed for proper alignment
+            this.setBounds(0, rect.y - 5, rect.width, rect.height - 5);
+            this.setSize((Dimension)evt.getNewValue());
             sizeController.changeSize((Dimension) evt.getNewValue());
         } else { //overlay update
             imageIcon.setImage(view.getState().getImage());

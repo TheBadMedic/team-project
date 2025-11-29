@@ -1,3 +1,4 @@
+import dataaccessobjects.InDiskGradientLoader;
 import entity.LayerNotFoundException;
 import entity.OverlayManager;
 import entity.WeatherType;
@@ -10,6 +11,8 @@ import usecase.weatherlayers.layers.ChangeLayerInputData;
 import usecase.weatherlayers.layers.ChangeLayerOutputBoundary;
 import usecase.weatherlayers.layers.ChangeLayerUseCase;
 
+import java.awt.image.BufferedImage;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 class ChangeLayerTest {
@@ -18,7 +21,7 @@ class ChangeLayerTest {
     private ChangeLayerOutputBoundary presenter = new WeatherLayersPresenter(vm);
     private LegendViewModel lVm = new LegendViewModel();
     private LegendPresenter legendPresenter = new LegendPresenter(lVm);
-    private ChangeLayerUseCase useCase = new ChangeLayerUseCase(om, presenter, legendPresenter);
+    private ChangeLayerUseCase useCase = new ChangeLayerUseCase(om, presenter, legendPresenter, new InDiskGradientLoader());
 
     @Test
     void changeType(){
@@ -40,6 +43,51 @@ class ChangeLayerTest {
         } catch (LayerNotFoundException e) {
             fail();
         }
+    }
+
+    @Test
+    void changeTypeTestLegend(){
+        try {
+            useCase.change(new ChangeLayerInputData(WeatherType.PRESSURE));
+            BufferedImage viewmodelImage = lVm.getState().getImage();
+            BufferedImage correctImage = new InDiskGradientLoader().getLegend(WeatherType.PRESSURE);
+            boolean pass = bufferedImagesEqual(viewmodelImage, correctImage);
+            assertTrue(pass);
+        } catch (LayerNotFoundException e) {
+            fail();
+        }
+    }
+
+    @Test
+    void changeTypeMultiTestLegend(){
+        try {
+            useCase.change(new ChangeLayerInputData(WeatherType.PRESSURE));
+            BufferedImage viewmodelImage = lVm.getState().getImage();
+            BufferedImage correctImage = new InDiskGradientLoader().getLegend(WeatherType.PRESSURE);
+            boolean pass = bufferedImagesEqual(viewmodelImage, correctImage);
+
+            useCase.change(new ChangeLayerInputData(WeatherType.WIND));
+            BufferedImage viewmodelImageWind = lVm.getState().getImage();
+            BufferedImage correctImageWind = new InDiskGradientLoader().getLegend(WeatherType.WIND);
+            boolean passSecond = bufferedImagesEqual(viewmodelImageWind, correctImageWind);
+            assertTrue(pass && passSecond);
+        } catch (LayerNotFoundException e) {
+            fail();
+        }
+    }
+
+    boolean bufferedImagesEqual(BufferedImage img1, BufferedImage img2) {
+        if (img1.getWidth() == img2.getWidth() && img1.getHeight() == img2.getHeight()) {
+            for (int x = 0; x < img1.getWidth(); x++) {
+                for (int y = 0; y < img1.getHeight(); y++) {
+                    if (img1.getRGB(x, y) != img2.getRGB(x, y))
+                        return false;
+                }
+            }
+        } else {
+            return false;
+        }
+        return true;
     }
 
 }
